@@ -4,11 +4,15 @@ from datetime import datetime
 import sys
 
 twitt_num = 0
+LOG_PATH = 'bot.log'
+g_log_file = None
 
 def log(msg):
 	time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 	outstring = "[%s] %s" % (time, msg)
 	print(outstring)
+	g_log_file.write(outstring)
+	g_log_file.flush()
 
 def onTwittMsg(msg):
 	'''트윗 전송시 떨어지는 콜백'''
@@ -17,6 +21,7 @@ def onTwittMsg(msg):
 	log("%d, %s" % (twitt_num, msg))
 
 def main(path, interval_sec, test_mode):
+
 	log('initializing...')
 
 	log('load db...')
@@ -45,4 +50,7 @@ if __name__ == "__main__":
 		path = sys.argv[1]
 	else:
 		path = 'db/db.json'
-	main(path, 60 * 60, False)
+
+	with open(LOG_PATH, 'w') as logFile:
+		g_log_file = logFile
+		main(path, 60 * 60, True)

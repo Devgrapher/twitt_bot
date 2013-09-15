@@ -38,3 +38,4 @@ nosetests.xml
 *.sublime-workspace
 
 db/db.json
+bot.log
