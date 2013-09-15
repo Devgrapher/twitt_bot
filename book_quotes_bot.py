@@ -16,7 +16,7 @@ def onTwittMsg(msg):
 	twitt_num += 1
 	log("%d, %s" % (twitt_num, msg))
 
-def main(path):
+def main(path, interval_sec, test_mode):
 	log('initializing...')
 
 	log('load db...')
@@ -25,7 +25,7 @@ def main(path):
 		print(a)
 
 	log('load twitt bot...')
-	bot = TwittBot(db=db.parsed, interval_sec=10, callback=onTwittMsg, test=True)
+	bot = TwittBot(db=db.parsed, interval_sec=interval_sec, callback=onTwittMsg, test=test_mode)
 	TwittBot.oauth_token = '1866109896-vPQPQiwu4TF9ohelvtC7qDdHK7L6RSay0yBQMfa'
 	TwittBot.oauth_secret = 'V38V7ALgjnj1iuMRFfTKTxDTYstindaSKZ8NlZufVsI'
 	TwittBot.consumer_key = 'NtH2XF9rRmowtQRGSfSz7g'
@@ -45,4 +45,4 @@ if __name__ == "__main__":
 		path = sys.argv[1]
 	else:
 		path = 'db/db.json'
-	main(path)
+	main(path, 60 * 60, False)
