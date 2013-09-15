@@ -4,6 +4,7 @@ import unittest
 from threading import Thread
 import time
 
+MAX_TWITT = 140
 
 class TwittBot(Thread):
 	'''작업 스레드를 생성하고 일정시간마다 트윗을 올리는 클래스'''
@@ -45,6 +46,10 @@ class TwittBot(Thread):
 
 	def twitt(msg):
 		'''트윗 올리는 함수'''
+		if len(msg) > MAX_TWITT:
+			print("twitt max len exceeded!! %s" % msg)
+			return
+
 		twitt = Twitter(
 	            auth=OAuth(TwittBot.oauth_token, TwittBot.oauth_secret,
 	             TwittBot.consumer_key, TwittBot.consumer_secret)

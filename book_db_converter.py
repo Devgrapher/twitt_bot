@@ -6,6 +6,7 @@ import os
 import os.path
 
 MERGE_FILE_NAME = 'db.json'
+MAX_TWITT = 140
 
 def regularize(str):
 	str = str.strip('0123456789\t ')
@@ -21,6 +22,8 @@ def parse(source):
 	result["author"] = author.lstrip()
 	result["publisher"] = publisher.lstrip()
 
+	tag_len = len(name) + len(author) + 2
+
 	# parse body
 	body = source[len(header):]
 	sentences = []
@@ -29,10 +32,12 @@ def parse(source):
 		s = regularize(entry)
 		if len(s) is 0:
 			continue
+		if len(s) > (MAX_TWITT - tag_len):
+			print('eceeded length... %d %s' % (MAX_TWITT - len(s) - tag_len,s))
 		sentences += [s,]
 	result["sentences"] = sentences
 
-	json_encoded = json.dumps(result, sort_keys=True, indent=4)
+	json_encoded = json.dumps(result, sort_keys=True, indent=4, ensure_ascii=False)
 	return json_encoded
 
 def mergeFiles(dir, outPath):
@@ -86,7 +91,6 @@ if __name__ == "__main__":
 		with open(src_path) as src, open(src_path+'.json', 'w') as out:
 			source = src.read()
 			encoded = parse(source)
-			print(encoded)
 			out.write(encoded)
 	elif len(sys.argv) == 3:
 		if sys.argv[1] == "merge":

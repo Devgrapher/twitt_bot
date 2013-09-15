@@ -7,7 +7,8 @@ twitt_num = 0
 
 def log(msg):
 	time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-	print("[%s] %s" % (time, msg))
+	outstring = "[%s] %s" % (time, msg)
+	print(outstring)
 
 def onTwittMsg(msg):
 	'''트윗 전송시 떨어지는 콜백'''
@@ -15,11 +16,13 @@ def onTwittMsg(msg):
 	twitt_num += 1
 	log("%d, %s" % (twitt_num, msg))
 
-def main():
+def main(path):
 	log('initializing...')
 
 	log('load db...')
-	db = BookDB.fromFile('test.json')
+	db = BookDB.fromFile(path)
+	for a in db.parsed:
+		print(a)
 
 	log('load twitt bot...')
 	bot = TwittBot(db=db.parsed, interval_sec=10, callback=onTwittMsg, test=True)
@@ -35,7 +38,11 @@ def main():
 	log('terminating...')
 
 if __name__ == "__main__":
-	if len(sys.argv) == 2:
-		start_index = sys.argv[1] # 시작할 db인덱스가 지정된 경우.
-		twitt_num = start_index
-	main()
+	if len(sys.argv) == 3:
+		start_index = sys.argv[2] # 시작할 db인덱스가 지정된 경우.
+		twitt_num = int(start_index)
+	if len(sys.argv) >= 2:
+		path = sys.argv[1]
+	else:
+		path = 'db/db.json'
+	main(path)
