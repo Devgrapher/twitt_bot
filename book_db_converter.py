@@ -2,6 +2,10 @@
 import unittest
 import json
 import sys
+import os
+import os.path
+
+MERGE_FILE_NAME = 'db.json'
 
 def regularize(str):
 	str = str.strip('0123456789\t ')
@@ -31,6 +35,29 @@ def parse(source):
 	json_encoded = json.dumps(result, sort_keys=True, indent=4)
 	return json_encoded
 
+def mergeFiles(dir, outPath):
+	'''json 디비파일들을 하나로 통합한다.'''
+	result = ('[') # 배열 선언
+	for root, ds, fs in os.walk(dir):
+		for f in fs:
+			if f == MERGE_FILE_NAME:
+				continue
+			if os.path.splitext(f)[1].lower() == ".json":
+				file_path = os.path.join(root, f)
+				with open(file_path) as src:
+					print(file_path)
+					result += src.read()
+					result += ',' #구분문자
+
+	# 출력
+	with open(outPath, 'w') as out:
+		if result[-1] == ',':
+			result = result[:-1]
+		result += ']'
+		out.write(result)
+
+# Test ##########################################
+
 class TestDB(unittest.TestCase):
 	def testParse(self):
 		source = '''stanford 2005, steve jobs, stanford univ.
@@ -56,16 +83,18 @@ if __name__ == "__main__":
 		unittest.main()
 	elif len(sys.argv) == 2:
 		src_path = sys.argv[1]
-		src = open(src_path)
-		out = open(src_path+'.json', 'w')
+		with open(src_path) as src, open(src_path+'.json', 'w') as out:
+			source = src.read()
+			encoded = parse(source)
+			print(encoded)
+			out.write(encoded)
+	elif len(sys.argv) == 3:
+		if sys.argv[1] == "merge":
+			src_dir = sys.argv[2]
+			mergeFiles(src_dir, os.path.join(src_dir, MERGE_FILE_NAME))
 
-		source = src.read()
-		encoded = parse(source)
-		print(encoded)
-		out.write(encoded)
-
-		out.close()
-		src.close()
 	else:
-		print('''usage : book_db_converter.py source_path''')
+		print('''usage :''')
+		print('''book_db_converter.py source_path''')
+		print('''book_db_converter.py merge source_dir''')
 
