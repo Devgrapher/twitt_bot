@@ -31,6 +31,8 @@ class BookDB:
 		self.parsed = result
 
 
+# test ##################################################
+
 class TestDB(unittest.TestCase):
 	def testParse(self):
 		raw ='''
