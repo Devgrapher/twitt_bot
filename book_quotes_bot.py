@@ -11,7 +11,7 @@ def log(msg):
 	time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 	outstring = "[%s] %s" % (time, msg)
 	print(outstring)
-	g_log_file.write(outstring)
+	g_log_file.write(outstring + '\n')
 	g_log_file.flush()
 
 def onTwittMsg(msg):
@@ -53,4 +53,4 @@ if __name__ == "__main__":
 
 	with open(LOG_PATH, 'w') as logFile:
 		g_log_file = logFile
-		main(path, 60 * 60, True)
+		main(path, 60 * 60, False)
