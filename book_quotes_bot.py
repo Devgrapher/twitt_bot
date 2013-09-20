@@ -1,6 +1,7 @@
 from twitt_bot import *
 from book_db import *
 from datetime import datetime
+from unittest import mock
 import sys
 
 twitt_num = 0
@@ -17,10 +18,11 @@ def log(msg):
 def onTwittMsg(msg):
 	'''트윗 전송시 떨어지는 콜백'''
 	global twitt_num
-	twitt_num += 1
 	log("%d, %s" % (twitt_num, msg))
+	if '#' in msg: # skip it when it's long msg
+		twitt_num += 1
 
-def main(path, interval_sec, test_mode):
+def main(path, interval_sec):
 
 	log('initializing...')
 
@@ -30,7 +32,7 @@ def main(path, interval_sec, test_mode):
 		print(a)
 
 	log('load twitt bot...')
-	bot = TwittBot(db=db.parsed, interval_sec=interval_sec, callback=onTwittMsg, test=test_mode)
+	bot = TwittBot(db=db.parsed, interval_sec=interval_sec, callback=onTwittMsg)
 	TwittBot.oauth_token = '1866109896-vPQPQiwu4TF9ohelvtC7qDdHK7L6RSay0yBQMfa'
 	TwittBot.oauth_secret = 'V38V7ALgjnj1iuMRFfTKTxDTYstindaSKZ8NlZufVsI'
 	TwittBot.consumer_key = 'NtH2XF9rRmowtQRGSfSz7g'
@@ -53,4 +55,5 @@ if __name__ == "__main__":
 
 	with open(LOG_PATH, 'w') as logFile:
 		g_log_file = logFile
-		main(path, 60 * 60, False)
+		#TwittBot._TwittBot__twittAPI = mock.MagicMock()
+		main(path, 60 * 60)
