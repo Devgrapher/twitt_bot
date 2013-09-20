@@ -24,7 +24,7 @@ class BookDB:
 				name = self.formatTag(book["name"])
 				author = self.formatTag(book["author"])
 				for sentence in book["sentences"]:
-					result += ["%s #%s #%s" % (sentence, author, name),]
+					result += ["%s #%s #%s" % (sentence, name, author),]
 			except KeyError as e:
 				print("parse error %s %s %s" %(e, name, author))
 				continue
@@ -53,14 +53,14 @@ class TestDB(unittest.TestCase):
 		bookdb = BookDB()
 		bookdb.parse(raw)
 		self.assertEqual(len(bookdb.parsed), 2)
-		self.assertEqual(bookdb.parsed[0], '''you can't connect the dots #steve_jobs #stanford_2005''')
-		self.assertEqual(bookdb.parsed[1], '''looking forward #steve_jobs #stanford_2005''')
+		self.assertEqual(bookdb.parsed[0], '''you can't connect the dots #stanford_2005 #steve_jobs''')
+		self.assertEqual(bookdb.parsed[1], '''looking forward #stanford_2005 #steve_jobs''')
 
 	def testFromFile(self):
 		bookdb = BookDB.fromFile("./test.json")
 		self.assertEqual(len(bookdb.parsed), 2)
-		self.assertEqual(bookdb.parsed[0], '''you can't connect the dots #steve_jobs #stanford_2005''')
-		self.assertEqual(bookdb.parsed[1], '''looking forward #steve_jobs #stanford_2005''')
+		self.assertEqual(bookdb.parsed[0], '''you can't connect the dots #stanford_2005 #steve_jobs''')
+		self.assertEqual(bookdb.parsed[1], '''looking forward #stanford_2005 #steve_jobs''')
 
 if __name__ == "__main__":
 	unittest.main()
