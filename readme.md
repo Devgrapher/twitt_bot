@@ -1,6 +1,8 @@
-##Twitt_Bot
+##Twitt Bot
 
 Python twitter bot.
 
-Twitt contents stored in db as a JSON format on every interval time.
+Contents stored in db as a JSON format are twitted on every interval time.
+
+It consists of library(twitt_bot.py) and bot(book_quotes_bot.py) implementing it.
 
